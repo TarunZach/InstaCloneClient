@@ -11,7 +11,7 @@ const Home = ()=>{
                     />
                 </div>
                 <div className="card-content">
-                    <i class="material-icons" style={{color:"red"}}>favorite</i>
+                    <i className="material-icons" style={{color:"red"}}>favorite</i>
                     <h6>Title</h6>
                     <p>Scenery image</p>
                     <input type="text" placeholder="Add a Comment"/>
@@ -39,7 +39,7 @@ const Home = ()=>{
                     />
                 </div>
                 <div className="card-content">
-                    <i class="material-icons" style={{color:"red"}}>favorite</i>
+                    <i className="material-icons" style={{color:"red"}}>favorite</i>
                     <h6>Title</h6>
                     <p>Scenery image</p>
                     <input type="text" placeholder="Add a Comment"/>
