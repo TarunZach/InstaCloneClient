@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import M from 'materialize-css';
 
@@ -9,42 +9,47 @@ const CreatePost = () => {
     const [image, setImage] = useState("")
     const [url, setUrl] = useState("")
 
-    const postDetails = ()=>{
-        const data = new FormData()
-        data.append("file",image)
-        data.append("upload_preset","insta-clone")
-        data.append("cloud_name","insttz")
-        fetch("https://api.cloudinary.com/v1_1/insttz/image/upload",{
-            method:"post",
-            body:data
-        }).then(res=>res.json())
-        .then(data=>{
-            console.log(url)
-            setUrl(data.url)
-        }).catch(err=>{
-            console.log(err)
-        })
+    useEffect(() => {
+        if(url){
+            fetch("/createpost", {
+                method: "post",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("jwt")
+                },
+                body: JSON.stringify({
+                    title,
+                    body,
+                    pic: url
+                })
+            }).then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    if (data.error) {
+                        M.toast({ html: data.error, classes: "#c62828 red darken-3" })
+                    }
+                    else {
+                        M.toast({ html: "Post Uploaded", classes: "#43a047 green darken-1" })
+                        history.push('/')
+                    }
+                }).catch(err => {
+                    console.log(err)
+                })
+        }    
+    }, [url]) //eslint-disable-line
 
-        fetch("/createpost", {
+    const postDetails = () => {
+        const data = new FormData()
+        data.append("file", image)
+        data.append("upload_preset", "insta-clone")
+        data.append("cloud_name", "insttz")
+        fetch("https://api.cloudinary.com/v1_1/insttz/image/upload", {
             method: "post",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                title,
-                body,
-                pic:url
-            })
+            body: data
         }).then(res => res.json())
             .then(data => {
-                console.log(data)
-                if (data.error) {
-                    M.toast({ html: data.error, classes: "#c62828 red darken-3" })
-                }
-                else {
-                    M.toast({ html: "Post Uploaded", classes: "#43a047 green darken-1" })
-                    history.push('/')
-                }
+                console.log(url)
+                setUrl(data.url)
             }).catch(err => {
                 console.log(err)
             })
@@ -78,7 +83,7 @@ const CreatePost = () => {
                 </div>
             </div>
             <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
-            onClick={()=>postDetails()}
+                onClick={() => postDetails()}
             >Submit Post
             </button>
         </div>
