@@ -4,6 +4,7 @@ import { UserContext } from '../../App';
 const Home = () => {
     const [data, setData] = useState([])
     const { state, dispatch } = useContext(UserContext)
+    console.log(state)
     useEffect(() => {
         fetch('/allpost', {
             headers: {
@@ -80,29 +81,24 @@ const Home = () => {
                                 />
                             </div>
                             <div className="card-content">
-                                {item.likes.includes(state._id)
+                                {item.likes.includes(state.user._id)
                                     ?
                                     <i
                                         className="material-icons"
                                         onClick={() => { unlikePost(item._id) }}
-                                    >
-                                        favorite_border
-                                    </i>
-                                    :
-                                    <i
-                                        className="material-icons"
-                                        onClick={() => { likePost(item._id) }}
                                         style={{ color: "red" }}
                                     >
                                         favorite
                                     </i>
+                                    :
+
+                                    <i
+                                        className="material-icons"
+                                        onClick={() => { likePost(item._id) }}
+                                    >
+                                        favorite_border
+                                    </i>
                                 }
-                                <i
-                                    className="material-icons"
-                                    onClick={() => { unlikePost(item._id) }}
-                                >
-                                    favorite_border
-                                </i>
 
                                 <h6>{item.likes.length} Likes</h6>
                                 <h6>{item.title}</h6>
