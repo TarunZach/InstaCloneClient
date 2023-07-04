@@ -17,6 +17,37 @@ const UserProfile = () => {
                 setProfile(result)
             })
     }, []) //eslint-disable-line
+
+    const followUser = () =>{
+        fetch('/follow',{
+            method:"put",
+            headers:{
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+localStorage.getItem("jwt")
+            },
+            body:JSON.stringify({
+                followId:userid
+            })
+        }).then(res=>res.json())
+        .then(data=>{
+            console.log(data)
+            dispatch({
+                type: "UPDATE",
+                payload: {
+                    following:data.following,
+                    followers:data.followers
+                }
+            })
+            localStorage.setItem("user",JSON.stringify(data))
+            // setProfile((prevState)=>{
+            //     return (
+            //         ...prevState,
+            //         user:data
+            //     )
+            // })
+        })
+    }
+
     return (
         <>
         {userprofile ? 
@@ -37,9 +68,13 @@ const UserProfile = () => {
                             <h4>{userprofile.user.name}</h4>
                             <div style={{ display: "flex", justifyContent: "space-between", width: "108%" }}>
                                 <h6>{userprofile.posts.length} Posts</h6>
-                                <h6>40 Followers</h6>
-                                <h6>40 Following</h6>
+                                <h6>{userprofile.user.followers.length} Followers</h6>
+                                <h6>{userprofile.user.following.length} Following</h6>
                             </div>
+                            <button className="btn waves-effect waves-light #64b5f6 blue darken-1"
+                                onClick={() => followUser()}
+                            >Follow
+                            </button>
                         </div>
                     </div>
                     <div className="gallery">
